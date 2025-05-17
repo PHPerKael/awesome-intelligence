@@ -1,0 +1,24 @@
+# macOS的Metal GPU不能虚拟化部署，这里配置的是容器内部访问本机的域名，请配置为实际容器的域名
+LLM_SERVER_BASE_URL: http://host.docker.internal:8000
+LLM_CHAT_ENDPOINT: v1/chat/completions
+
+RAG_FEEDS_DIR: /app/feeds
+
+# ["Memory", "Chroma", "Milvus", "MongoDB", "PGVector", ...]
+RAG_VECTOR_STORAGE_TYPE: Chroma
+RAG_VECTOR_DIR: /app/vector
+RAG_CHROMA_DB: Chroma.db
+
+RAG_SQLITE_DIR: /app/sqlite
+SQLITE_METADATA_DB: metadata.db
+
+EMBEDDINGS_MODEL: QWen
+
+DASH_SCOPE_API_KEY: your-api-key(aliyun-qwen)
+DASH_SCOPE_BASE_URL: https://dashscope.aliyuncs.com/compatible-mode/v1
+DASH_SCOPE_EMBEDDINGS_MODEL: text-embedding-v3
+
+RAR_CHROMA_DB_COLLECTION_NAME: awesome-intelligence
+
+RAG_CHROMA_DB_DOCUMENTS_NUMBER_RETURN: 8
+EMBEDDING_DIMENSION: 1024

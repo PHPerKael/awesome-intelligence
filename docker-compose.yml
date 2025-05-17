@@ -1,0 +1,108 @@
+networks:
+  ai_net:
+    driver: bridge
+    
+volumes:
+  feeds:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .data/.feeds
+  vector:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .data/.vector
+  sqlite:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .data/.sqlite
+  gradio:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: .data/.gradio
+
+services:
+  # llm:
+  #   networks:
+  #     - ai_net
+  #   # same with ghcr.io/ggml-org/llama.cpp:full-b5439
+  #   image: registry.cn-guangzhou.aliyuncs.com/gopher-kael/ai-llama.cpp:full-b5439
+  #   command:
+  #     - "--server"
+  #     - "--model"
+  #     - "/app/models/Qwen3-8B-Q4_K_M.gguf"
+  #     - "--temp"
+  #     - "0.9"
+  #     - "--repeat-penalty"
+  #     - "2.0"
+  #     - "--presence-penalty"
+  #     - "0.7"
+  #     - "--frequency-penalty"
+  #     - "0.8"
+  #     - "--mirostat"
+  #     - "2"
+  #     - "--mirostat-ent"
+  #     - "4.0"
+  #     - "--mirostat-lr"
+  #     - "0.2"
+  #     - "--logit-bias"
+  #     - "151645+100"
+  #     - "--dry-multiplier"
+  #     - "1.2"
+  #   env_file:
+  #     - llama.yaml
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - type: bind
+  #       source: llm/models
+  #       target: /app/models
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 16G
+  rag:
+    networks:
+      - ai_net
+    image: registry.cn-guangzhou.aliyuncs.com/gopher-kael/ai-rag:v0.1.0
+    env_file:
+      - rag.yaml
+    command:
+      - "python"
+      - "/app/rag/rag.py"
+    ports:
+      - "8001:8001"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    volumes:
+      - ./rag:/app/rag
+      - feeds:/app/feeds:rw
+      - sqlite:/app/sqlite:rw
+      - vector:/app/vector:rw
+  webapp:
+    networks:
+      - ai_net
+    image: registry.cn-guangzhou.aliyuncs.com/gopher-kael/ai-webapp:v0.1.0
+    env_file:
+      - webapp.yaml
+    command:
+      - "python"
+      - "/app/webapp/webapp.py"
+    ports:
+      - "7860:7860"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    volumes:
+      - ./webapp:/app/webapp
+      - gradio:/tmp/gradio:rw

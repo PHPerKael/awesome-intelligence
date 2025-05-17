@@ -1,0 +1,4 @@
+LLM_ENDPOINT: http://llm:8000
+RAG_ENDPOINT: http://rag:8001
+RAG_DOCUMENTS_API_PREFIX: document
+GRADIO_TEMP_DIR: /tmp/gradio
