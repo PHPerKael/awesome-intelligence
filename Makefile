@@ -10,7 +10,7 @@ BUILD_COMMAND = build
 IMAGE_VERSION = v0.1.0
 # NO_CACHE = --no-cache
 
-default: docker-login llm rag webapp 
+default: docker-login rag webapp 
 
 .PHONY: docker-login
 docker-login:
@@ -20,10 +20,6 @@ docker-login:
 # pip-tools:
 # 	pip install pip-tools
 # 	pip-compile requirements.in
-
-.PHONY: llm
-llm:
-	docker $(BUILD_COMMAND) $(NO_CACHE) $(IMAGE_PLATFORM) -t $(REGISTRY)/ai-llm:$(IMAGE_VERSION) llm
 
 .PHONY: rag
 rag:
